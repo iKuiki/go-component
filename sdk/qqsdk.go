@@ -2,8 +2,8 @@ package sdk
 
 import (
 	"fmt"
-	"tapi/helper/encoding"
-	"tapi/helper/util"
+	"github.com/yinhui87/go-component/encoding"
+	"github.com/yinhui87/go-component/util"
 )
 
 type QqSdk struct {

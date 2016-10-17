@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/yinhui87/go-component/crypto"
+	"github.com/yinhui87/go-component/encoding"
+	"github.com/yinhui87/go-component/language"
+	"github.com/yinhui87/go-component/util"
 	"net/url"
-	"tapi/helper/encoding"
-	"tapi/helper/language"
-	"tapi/helper/util"
 	"time"
 )
 

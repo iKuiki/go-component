@@ -13,10 +13,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/yinhui87/go-component/encoding"
+	"github.com/yinhui87/go-component/language"
+	"github.com/yinhui87/go-component/util"
 	"tapi/config"
-	"tapi/helper/encoding"
-	"tapi/helper/language"
-	"tapi/helper/util"
 )
 
 type WxSdk struct {

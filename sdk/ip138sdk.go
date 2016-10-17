@@ -2,10 +2,10 @@ package sdk
 
 import (
 	"errors"
+	"github.com/yinhui87/go-component/util"
 	"net"
 	"regexp"
 	"sync"
-	"tapi/helper/util"
 )
 
 type Ip138Sdk struct {

@@ -6,10 +6,10 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/yinhui87/go-component/crypto"
+	"github.com/yinhui87/go-component/encoding"
+	"github.com/yinhui87/go-component/language"
+	"github.com/yinhui87/go-component/util"
 	"strings"
-	"tapi/helper/encoding"
-	"tapi/helper/language"
-	"tapi/helper/util"
 	"time"
 )
 
