@@ -1,4 +1,4 @@
-package sdk
+package wechatsdk
 
 import (
 	"crypto/sha1"

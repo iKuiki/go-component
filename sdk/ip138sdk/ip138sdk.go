@@ -1,4 +1,4 @@
-package sdk
+package ip138sdk
 
 import (
 	"errors"

@@ -1,4 +1,4 @@
-package sdk
+package umengsdk
 
 import (
 	"crypto/md5"

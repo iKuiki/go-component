@@ -1,4 +1,4 @@
-package sdk
+package alicloudmonitorsdk
 
 import (
 	"encoding/json"

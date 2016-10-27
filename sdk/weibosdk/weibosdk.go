@@ -1,32 +1,14 @@
-package sdk
+package weibosdk
 
 import (
 	"github.com/yinhui87/go-component/encoding"
+	"github.com/yinhui87/go-component/sdk/common"
 	"github.com/yinhui87/go-component/util"
 )
 
 type WeiboSdk struct {
 	AppId     string
 	AppSecret string
-}
-
-type WeiboSdkOauthAccessToken struct {
-	AccessToken string `json:"access_token"`
-	ExpiresIn   uint32 `json:"expires_in"`
-	RemindIn    string `json:"remind_in"`
-	Uid         string `json:"uid"`
-}
-
-type WeiboSdkUserInfo struct {
-	Id         uint64 `json:"id"`
-	Idstr      string `json:"idstr"`
-	ScreenName string `json:"screen_name"`
-	Name       string `json:"name"`
-	// 用户无用信息暂不处理？
-	ProfileImageUrl string `json:"profile_image_url"`
-	Gender          string `json:"gender"`
-	AvatarLarge     string `json:"avatar_large"`
-	AvatarHd        string `json:"avatar_hd"`
 }
 
 func (this *WeiboSdk) api(method string, url string, query interface{}) ([]byte, error) {
@@ -59,7 +41,7 @@ func (this *WeiboSdk) apiUrl(method string, url string, query interface{}, respo
 	if err != nil {
 		return err
 	}
-	var sdkErr QqSdkError
+	var sdkErr common.SdkError
 	_, err = encoding.DecodeJsonp(result, &sdkErr)
 	if err == nil && sdkErr.Code != 0 {
 		return &sdkErr

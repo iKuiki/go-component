@@ -1,8 +1,8 @@
-package sdk
+package qqsdk
 
 import (
-	"fmt"
 	"github.com/yinhui87/go-component/encoding"
+	"github.com/yinhui87/go-component/sdk/common"
 	"github.com/yinhui87/go-component/util"
 )
 
@@ -39,23 +39,6 @@ type QqSdkOauthUserInfo struct {
 	City            string `json:"city"`
 }
 
-type QqSdkError struct {
-	Code    int    `url:"error" jsonp:"error" json:"ret"`
-	Message string `url:"error_description" jsonp:"error_description" json:"msg"`
-}
-
-func (this *QqSdkError) GetCode() int {
-	return this.Code
-}
-
-func (this *QqSdkError) GetMsg() string {
-	return this.Message
-}
-
-func (this *QqSdkError) Error() string {
-	return fmt.Sprintf("错误码为：%v，错误描述为：%v", this.Code, this.Message)
-}
-
 func (this *QqSdk) api(method string, url string, query interface{}) ([]byte, error) {
 	queryInfo, err := encoding.EncodeUrlQuery(query)
 	if err != nil {
@@ -85,7 +68,7 @@ func (this *QqSdk) apiUrl(method string, url string, query interface{}, response
 	if err != nil {
 		return err
 	}
-	var sdkErr QqSdkError
+	var sdkErr common.SdkError
 	_, err = encoding.DecodeJsonp(result, &sdkErr)
 	if err == nil && sdkErr.Code != 0 {
 		return &sdkErr
@@ -103,7 +86,7 @@ func (this *QqSdk) apiJsonp(method string, url string, query interface{}, respon
 		return err
 	}
 
-	var sdkErr QqSdkError
+	var sdkErr common.SdkError
 	_, err = encoding.DecodeJsonp(result, &sdkErr)
 	if err == nil && sdkErr.Code != 0 {
 		return &sdkErr
@@ -121,7 +104,7 @@ func (this *QqSdk) apiJson(method string, url string, query interface{}, respons
 		return err
 	}
 
-	var sdkErr QqSdkError
+	var sdkErr common.SdkError
 	err = encoding.DecodeJson(result, &sdkErr)
 	if err == nil && sdkErr.Code != 0 {
 		return &sdkErr

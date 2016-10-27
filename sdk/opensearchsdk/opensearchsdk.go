@@ -1,4 +1,4 @@
-package sdk
+package opensearchsdk
 
 import (
 	"crypto/hmac"

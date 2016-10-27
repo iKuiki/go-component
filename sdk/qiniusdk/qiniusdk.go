@@ -1,4 +1,4 @@
-package sdk
+package qiniusdk
 
 import (
 	"bytes"
