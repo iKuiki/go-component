@@ -39,13 +39,13 @@ func NewUmengSdk(appKey, appSecret string) (umengSdk *UmengSdk, initError error)
 	return server, nil
 }
 
-func (this *UmengSdk) SendAndroid(umengAndroid UmengAndroid) (UmengResult, error) {
+func (this *UmengSdk) SendAndroid(umengAndroid UmengAndroid) (msgId string, err error) {
 	sign := ""
 	method := "POST"
 
 	body, err := encoding.EncodeJson(umengAndroid)
 	if err != nil {
-		return UmengResult{}, err
+		return "", errors.New("EncodeJson Error: " + err.Error())
 	}
 	sign = this.getSign(method, sendUrl, string(body))
 	url := sendUrl + "?sign=" + sign
@@ -58,25 +58,28 @@ func (this *UmengSdk) SendAndroid(umengAndroid UmengAndroid) (UmengResult, error
 	})
 	if err != nil {
 		if _, ok := err.(*util.AjaxStatusCodeError); !ok {
-			return UmengResult{}, err
+			return "", errors.New("DefaultAjaxPool.Post Error: " + err.Error())
 		}
 	}
 
 	var finalResult UmengResult
 	err = encoding.DecodeJson(result, &finalResult)
 	if err != nil {
-		return UmengResult{}, err
+		return "", errors.New("DecodeJson Error: " + err.Error())
 	}
-	return finalResult, nil
+	if finalResult.Ret != "SUCCESS" {
+		return "", errors.New("UmengResult Error, ErrorCode: " + finalResult.Data.ErrorCode)
+	}
+	return finalResult.Data.MsgId, nil
 }
 
-func (this *UmengSdk) SendIOS(umengIOS UmengIOS) (UmengResult, error) {
+func (this *UmengSdk) SendIOS(umengIOS UmengIOS) (msgId string, err error) {
 	sign := ""
 	method := "POST"
 
 	body, err := encoding.EncodeJson(umengIOS)
 	if err != nil {
-		return UmengResult{}, err
+		return "", errors.New("EncodeJson Error: " + err.Error())
 	}
 	sign = this.getSign(method, sendUrl, string(body))
 	url := sendUrl + "?sign=" + sign
@@ -89,16 +92,19 @@ func (this *UmengSdk) SendIOS(umengIOS UmengIOS) (UmengResult, error) {
 	})
 	if err != nil {
 		if _, ok := err.(*util.AjaxStatusCodeError); !ok {
-			return UmengResult{}, err
+			return "", errors.New("DefaultAjaxPool.Post Error: " + err.Error())
 		}
 	}
 
 	var finalResult UmengResult
 	err = json.Unmarshal(result, &finalResult)
 	if err != nil {
-		return UmengResult{}, err
+		return "", errors.New("Unmarshal Error: " + err.Error())
 	}
-	return finalResult, nil
+	if finalResult.Ret != "SUCCESS" {
+		return "", errors.New("UmengResult Error, ErrorCode: " + finalResult.Data.ErrorCode)
+	}
+	return finalResult.Data.MsgId, nil
 }
 
 func (this *UmengSdk) GetFileId(deviceToken string) (UmengFileResult, error) {

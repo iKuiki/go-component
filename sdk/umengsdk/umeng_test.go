@@ -33,15 +33,10 @@ func TestSendMessage(t *testing.T) {
 			},
 		},
 	}
-	androidRet, err := sdk.SendAndroid(umengAndroid)
+	msgId, err := sdk.SendAndroid(umengAndroid)
 	if err != nil {
 		t.Errorf("SendAndroid Error: %s\n", err.Error())
 	} else {
-		t.Logf("SendAndroid Result: %s, ErrorCode: %s, MsgId: %s, TaskId: %s, ThirdpartyId: %s, \n",
-			androidRet.Ret,
-			androidRet.Data.ErrorCode,
-			androidRet.Data.MsgId,
-			androidRet.Data.TaskId,
-			androidRet.Data.ThirdpartyId)
+		t.Logf("SendAndroid Success, MsgId: %s\n", msgId)
 	}
 }
