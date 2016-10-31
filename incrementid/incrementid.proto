@@ -1,0 +1,28 @@
+syntax = "proto3";
+package incrementid;
+
+service IncrementId {
+	rpc GetIncrId (IncrIdNameRequest) returns (IncrIdReply) {}
+	rpc GetIncrIdByAmount (IncrIdNameValueRequest) returns (IncrIdReply) {}
+	rpc CheckIncrKeyExist(IncrIdNameRequest) returns (IncrBoolReply) {}
+	rpc CreateIncrKey(IncrIdNameValueRequest) returns (NoneReply) {}
+}
+
+message IncrIdNameRequest {
+	string name = 1;
+}
+
+message IncrIdReply {
+	uint64 id = 1;
+}
+
+message IncrBoolReply {
+	bool ret = 1;
+}
+
+message IncrIdNameValueRequest{
+	string name = 1;
+	uint64 value = 2;
+}
+
+message NoneReply{}
