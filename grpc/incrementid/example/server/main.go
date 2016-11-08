@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/yinhui87/go-component/config"
-	"github.com/yinhui87/go-component/incrementid"
+	"github.com/yinhui87/go-component/grpc/incrementid"
 	"google.golang.org/grpc"
 	"log"
 	"net"
