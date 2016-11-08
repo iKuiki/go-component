@@ -1,0 +1,14 @@
+syntax = "proto3";
+package config;
+
+service Config{
+	rpc Env (ConfigNameRequest) returns (ConfigValueReply) {} // GetConfigFromConfig
+}
+
+message ConfigNameRequest{
+	string name = 1;
+}
+
+message ConfigValueReply{
+	string value = 1;
+}
