@@ -96,7 +96,7 @@ var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion3
+const _ = grpc.SupportPackageIsVersion4
 
 // Client API for IncrementId service
 
@@ -258,7 +258,7 @@ var _IncrementId_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: fileDescriptor0,
+	Metadata: "incrementid.proto",
 }
 
 func init() { proto.RegisterFile("incrementid.proto", fileDescriptor0) }
