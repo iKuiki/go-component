@@ -16,7 +16,6 @@ import (
 	"github.com/yinhui87/go-component/encoding"
 	"github.com/yinhui87/go-component/language"
 	"github.com/yinhui87/go-component/util"
-	"tapi/config"
 )
 
 type WxSdk struct {
@@ -201,11 +200,11 @@ func (this *WxSdkError) Error() string {
 	return fmt.Sprintf("错误码为：%v，错误描述为：%v", this.Code, this.Message)
 }
 
-func GetWxSdk() *WxSdk {
+func GetWxSdk(appId, appSecret, appToken string) *WxSdk {
 	return &WxSdk{
-		AppId:     config.Env("WXMP_APP_ID"),
-		AppSecret: config.Env("WXMP_APP_SECRET"),
-		Token:     config.Env("WXMP_APP_TOKEN"),
+		AppId:     appId,
+		AppSecret: appSecret,
+		Token:     appToken,
 	}
 }
 
