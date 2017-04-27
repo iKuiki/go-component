@@ -12,6 +12,9 @@ type DaocloudSDK struct {
 }
 
 func NewDaocloudSDK(accessToken string) (sdk *DaocloudSDK, err error) {
+	if accessToken == "" {
+		return nil, errors.New("Empty access token")
+	}
 	sdk = &DaocloudSDK{
 		accessToken: accessToken,
 	}
