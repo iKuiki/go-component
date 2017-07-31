@@ -2,8 +2,9 @@ package qiniusdk
 
 import (
 	"errors"
+	"github.com/qiniu/api.v7/conf"
 	"github.com/yinhui87/go-component/crypto"
-	"qiniupkg.com/api.v7/conf"
+	// "qiniupkg.com/api.v7/conf"
 	"qiniupkg.com/api.v7/kodo"
 	"strconv"
 	"sync/atomic"
