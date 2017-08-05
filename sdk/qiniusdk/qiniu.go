@@ -2,17 +2,12 @@ package qiniusdk
 
 import (
 	"errors"
+	"github.com/google/uuid"
 	"github.com/qiniu/api.v7/conf"
 	"github.com/yinhui87/go-component/crypto"
 	// "qiniupkg.com/api.v7/conf"
 	"qiniupkg.com/api.v7/kodo"
-	"strconv"
-	"sync/atomic"
 	"time"
-)
-
-var (
-	increment uint64
 )
 
 func NewQiniuSdk(accessKey, secretKey, bucket string, tokenExpire uint32, maxUploadSize int64) (qiniuSdk *QiniuSdk, err error) {
@@ -46,9 +41,9 @@ type QiniuSdk struct {
 	MaxUploadSize int64
 }
 
-func (this *QiniuSdk) GenFilename(uniqueStr, ext string) (filename string) {
-	incr := atomic.AddUint64(&increment, 1)
-	filename = time.Now().Format("20060102-150405-") + crypto.GetMd5String(strconv.FormatUint(incr, 10)+"-"+uniqueStr) + ext
+func (this *QiniuSdk) GenFilename(ext string) (filename string) {
+	uu := uuid.New()
+	filename = time.Now().Format("20060102-150405-") + crypto.GetMd5String(uu.String()) + ext
 	return filename
 }
 
