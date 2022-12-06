@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/yinhui87/go-component/language"
 	"strings"
+
+	"github.com/iKuiki/go-component/language"
 )
 
 func EncodeJsonp(functionName string, data interface{}) ([]byte, error) {

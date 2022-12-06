@@ -2,7 +2,8 @@ package encoding
 
 import (
 	"encoding/json"
-	"github.com/yinhui87/go-component/language"
+
+	"github.com/iKuiki/go-component/language"
 )
 
 func EncodeJson(data interface{}) ([]byte, error) {

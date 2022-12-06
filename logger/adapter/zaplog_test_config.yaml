@@ -1,0 +1,14 @@
+zap:
+  logLevel: 'debug'
+  fileName: './main.json.log'
+  timeFormat: '2006-01-02 15:04:05.000000'
+  timeKey: 'time'
+  levelKey: 'level'
+  callerKey: 'caller'
+  messageKey: 'message'
+  contextKeys: ['request_id', 'user_id']
+rotate:
+  maxSize: 30
+  maxAge: 30
+  maxBackups: 30
+  compress: false
