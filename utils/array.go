@@ -7,6 +7,8 @@ import (
 	"sort"
 )
 
+// ArrayReverse 切片逆序
+// 将传入的切片逆序后输出
 func ArrayReverse(data interface{}) interface{} {
 	dataValue := reflect.ValueOf(data)
 	dataType := dataValue.Type()
@@ -19,6 +21,8 @@ func ArrayReverse(data interface{}) interface{} {
 	return result.Interface()
 }
 
+// ArrayIn 检查给定元素在目标切片的什么位置
+// 如果未找到则返回-1
 func ArrayIn(arrayData interface{}, findData interface{}) int {
 	var findIndex int
 	findIndex = -1
@@ -34,6 +38,8 @@ func ArrayIn(arrayData interface{}, findData interface{}) int {
 	return findIndex
 }
 
+// ArrayUnique 将给定切片中重复元素剔除
+// 保证切片中元素唯一
 func ArrayUnique(arrayData interface{}) interface{} {
 	arrayValue := reflect.ValueOf(arrayData)
 	arrayType := arrayValue.Type()
@@ -55,6 +61,8 @@ func ArrayUnique(arrayData interface{}) interface{} {
 	return result.Interface()
 }
 
+// 将slice转为map
+// 转换后slice的item为map的key
 func sliceToMap(arrayData []interface{}) map[interface{}]bool {
 	result := map[interface{}]bool{}
 
@@ -70,6 +78,8 @@ func sliceToMap(arrayData []interface{}) map[interface{}]bool {
 	return result
 }
 
+// ArrayDiff 计算切片的差集
+// 对给定的切片A，剔除B、C。。。中包含的元素后输出
 func ArrayDiff(arrayData interface{}, arrayData2 interface{}, arrayOther ...interface{}) interface{} {
 	arrayOther = append([]interface{}{arrayData2}, arrayOther...)
 	arrayOtherMap := sliceToMap(arrayOther)
@@ -94,6 +104,7 @@ func ArrayDiff(arrayData interface{}, arrayData2 interface{}, arrayOther ...inte
 	return result.Interface()
 }
 
+// ArrayIntersect 对多个切片计算交集
 func ArrayIntersect(arrayData interface{}, arrayData2 interface{}, arrayOther ...interface{}) interface{} {
 	arrayOther = append([]interface{}{arrayData2}, arrayOther...)
 	arrayOtherMap := sliceToMap(arrayOther)
@@ -118,6 +129,7 @@ func ArrayIntersect(arrayData interface{}, arrayData2 interface{}, arrayOther ..
 	return result.Interface()
 }
 
+// ArrayMerge 对多个切片计算并集
 func ArrayMerge(arrayData interface{}, arrayData2 interface{}, arrayOther ...interface{}) interface{} {
 	arrayOther = append([]interface{}{arrayData2}, arrayOther...)
 	arrayOtherMap := sliceToMap(arrayOther)
@@ -149,6 +161,8 @@ func ArrayMerge(arrayData interface{}, arrayData2 interface{}, arrayOther ...int
 	return result.Interface()
 }
 
+// ArraySort 对切片进行升序排序
+// 只允许传入[]int与[]string类型
 func ArraySort(data interface{}) interface{} {
 	//建立一份拷贝数据
 	dataValue := reflect.ValueOf(data)
@@ -175,6 +189,7 @@ func ArraySort(data interface{}) interface{} {
 	return result
 }
 
+// ArrayShuffle 将传入切片乱序后输出
 func ArrayShuffle(data interface{}) interface{} {
 	//建立一份拷贝数据
 	dataValue := reflect.ValueOf(data)
@@ -191,6 +206,10 @@ func ArrayShuffle(data interface{}) interface{} {
 	return dataResult.Interface()
 }
 
+// ArraySlice 获取切片中指定位置的一段数据
+// 从index为begin的位置开始截取，包含begin
+// 到index为end的位置停止，不含end
+// begin与end做了安全校验
 func ArraySlice(data interface{}, beginIndex int, endIndexArray ...int) interface{} {
 	//建立一份拷贝数据
 	dataValue := reflect.ValueOf(data)
@@ -205,17 +224,18 @@ func ArraySlice(data interface{}, beginIndex int, endIndexArray ...int) interfac
 		endIndex = dataValueLen
 	}
 	size := 0
+	// 几个特殊情况，都不返回数据
 	if beginIndex >= endIndex {
-		//逆向
+		// index逆向，不返回数据
 		size = 0
 	} else if endIndex <= 0 {
-		//在左边
+		// 结束位置越左界，不返回数据
 		size = 0
 	} else if beginIndex >= dataValueLen {
-		//在右边
+		// 开始位置越右界，不返回数据
 		size = 0
 	} else {
-		//有交集
+		// 有交集，则调整边界为有效值
 		if beginIndex <= 0 {
 			beginIndex = 0
 		}
