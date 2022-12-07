@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-//基础类函数
+// 基础类函数
 func QuerySelect(data interface{}, selectFuctor interface{}) interface{} {
 	dataValue := reflect.ValueOf(data)
 	dataLen := dataValue.Len()
@@ -100,6 +100,7 @@ func (this *querySortSlice) Swap(i, j int) {
 	right.Set(temp)
 }
 
+// QuerySort 对查询对象排序
 func QuerySort(data interface{}, sortType string) interface{} {
 	//拷贝一份
 	dataValue := reflect.ValueOf(data)
@@ -256,7 +257,14 @@ func analyseJoin(joinType string) (string, string) {
 	return leftJoinType, rightJoinType
 }
 
-func analyseSort(sortType string) (result1 []string, result2 []bool) {
+// analyseSort 分析类sql的排序查询语句
+// @param sortType 类sql查询排序语句
+// 如：ID DESC,Name Asc
+// 先拆分为多条查询字句
+// 再检查每条子句的查询列、查询方向（asc or desc）
+// @return sortKeys 排序列表的字段名
+// @return sortAscTypes 与sortKeys对应位置的排序字段是升序(true)还是降序(false)
+func analyseSort(sortType string) (sortKeys []string, sortAscTypes []bool) {
 	sortTypeArray := strings.Split(sortType, ",")
 	for _, singleSortTypeArray := range sortTypeArray {
 		singleSortTypeArrayTemp := strings.Split(singleSortTypeArray, " ")
@@ -270,17 +278,17 @@ func analyseSort(sortType string) (result1 []string, result2 []bool) {
 		}
 		var singleSortName string
 		var singleSortType bool
-		if len(singleSortTypeArray) >= 2 {
+		if len(singleSortTypeArray) >= 2 { // 该子句有2条以上短句，则判断第二句是否为升序
 			singleSortName = singleSortTypeArray[0]
 			singleSortType = (strings.ToLower(strings.Trim(singleSortTypeArray[1], " ")) == "asc")
 		} else {
 			singleSortName = singleSortTypeArray[0]
 			singleSortType = true
 		}
-		result1 = append(result1, singleSortName)
-		result2 = append(result2, singleSortType)
+		sortKeys = append(sortKeys, singleSortName)
+		sortAscTypes = append(sortAscTypes, singleSortType)
 	}
-	return result1, result2
+	return sortKeys, sortAscTypes
 }
 
 func getQueryCompares(dataType reflect.Type, sortTypeStr string) []queryCompare {
@@ -300,6 +308,8 @@ func getQueryCompares(dataType reflect.Type, sortTypeStr string) []queryCompare 
 	return targetCompare
 }
 
+// 根据传入的reflect.Type获取对应的比较func
+// @return queryCompare 比较func，对传入的reflect.Value比较，如果前者小则返回-1，前者大则返回1
 func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 	typeKind := GetTypeKind(fieldType)
 	if typeKind == TypeKind.BOOL {
@@ -379,6 +389,8 @@ func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 	}
 }
 
+// 获取传入对象中指定字段的比较func
+// @param dataType 要比较的对象，支持struct
 func getQueryCompare(dataType reflect.Type, name string) queryCompare {
 	field, ok := getFieldByName(dataType, name)
 	if !ok {
@@ -386,6 +398,7 @@ func getQueryCompare(dataType reflect.Type, name string) queryCompare {
 	}
 	fieldIndex := field.Index
 	fieldType := field.Type
+	// 通过reflect.Type获取该类型对应的比较func
 	compare := getSingleQueryCompare(fieldType)
 	return func(left reflect.Value, right reflect.Value) int {
 		return compare(left.FieldByIndex(fieldIndex), right.FieldByIndex(fieldIndex))
@@ -490,6 +503,8 @@ func QueryMin(data interface{}) interface{} {
 	}
 }
 
+// QueryColumn 查询[]struct的列
+// 将指定的列重组为切片返回
 func QueryColumn(data interface{}, column string) interface{} {
 	dataValue := reflect.ValueOf(data)
 	dataType := dataValue.Type().Elem()
@@ -523,6 +538,11 @@ func QueryReverse(data interface{}) interface{} {
 	return result.Interface()
 }
 
+// QueryDistinct 对查询去重
+// @param data 元素为struct的切片
+// @param columnNames 要用来去重的列名，可以是多个以,分隔
+// 如果传入了多个列名，则多个列的内容会一起比较，一个元素的多个指定列都相同才被认为是重复
+// 也就是传入的列的内容都相同的元素才会被剔除
 func QueryDistinct(data interface{}, columnNames string) interface{} {
 	//提取信息
 	name := Explode(columnNames, ",")

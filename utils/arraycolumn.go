@@ -6,10 +6,18 @@ import (
 	"sort"
 )
 
+// ArrayColumnSort 对传入的struct为元素的切片
+// 根据给定的column对其进行排序
+// columnNames支持类sql查询，如ID asc,Name desc
+// columnNames也支持struct嵌套查询，如Name.First
 func ArrayColumnSort(data interface{}, columnNames string) interface{} {
 	return QuerySort(data, columnNames)
 }
 
+// ArrayColumnUnique 对传入的以struct为元素的切片
+// 根据给定的column去重
+// 传入的columnNames可以是多个字段，以,分隔
+// 如果传入多个字段，则多个字段都相同的元素才会认为是重复元素
 func ArrayColumnUnique(data interface{}, columnNames string) interface{} {
 	return QueryDistinct(data, columnNames)
 }
@@ -20,10 +28,14 @@ type arrayColumnMapInfo struct {
 	MapType reflect.Type
 }
 
+// ArrayColumnKey 对传入的以struct为元素的切片
+// 获取给定的列名下的字段重组为切片返回
 func ArrayColumnKey(data interface{}, columnName string) interface{} {
 	return QueryColumn(data, columnName)
 }
 
+// ArrayColumnMap 对传入的以struct为元素的切片
+// 生成对元素取其指定字段为key，原struct为value的map后返回
 func ArrayColumnMap(data interface{}, columnNames string) interface{} {
 	//提取信息
 	name := Explode(columnNames, ",")
@@ -73,6 +85,9 @@ func ArrayColumnMap(data interface{}, columnNames string) interface{} {
 	return result.Interface()
 }
 
+// ArrayColumnTable 将传入的数据转换为表格(二维数组)的形式展示
+// @param column map[string]string 列ID:列名
+// @param data 存放数据的以struct为元素的切片
 func ArrayColumnTable(column interface{}, data interface{}) [][]string {
 	result := [][]string{}
 

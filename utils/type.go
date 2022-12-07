@@ -5,6 +5,7 @@ import (
 	"sync"
 )
 
+// TypeKind kind类型
 var TypeKind struct {
 	EnumStruct
 	BOOL      int `enum:"1,布尔"`
@@ -26,6 +27,9 @@ func init() {
 	InitEnumStruct(&TypeKind)
 }
 
+// GetTypeKind 获取reflect下的Type
+// 此处获取的kind是一个近似kind
+// 如int\int8\int16\int32都归为int
 func GetTypeKind(t reflect.Type) int {
 	switch t.Kind() {
 	case reflect.Bool:
@@ -61,6 +65,7 @@ type zeroable interface {
 	IsZero() bool
 }
 
+// IsEmptyValue 判断对象是否为空
 func IsEmptyValue(v reflect.Value) bool {
 	k := v.Interface()
 	switch k.(type) {
@@ -103,11 +108,8 @@ type getFieldByNameResult struct {
 	isExist     bool
 }
 
-var (
-	getFieldByNameCache = map[reflect.Type]map[string]getFieldByNameResult{}
-	getFieldByNameMutex = sync.RWMutex{}
-)
-
+// 获取指定的struct列的反射type
+// 传入的name可以接受.分割
 func getFieldByNameInner(t reflect.Type, name string) (reflect.StructField, bool) {
 	nameArray := Explode(name, ".")
 	if len(nameArray) == 0 {
@@ -128,8 +130,16 @@ func getFieldByNameInner(t reflect.Type, name string) (reflect.StructField, bool
 	return resultStruct, true
 }
 
+var ( // 反射机制获取field比较慢，增加一个缓存节约性能
+	getFieldByNameCache = map[reflect.Type]map[string]getFieldByNameResult{}
+	getFieldByNameMutex = sync.RWMutex{}
+)
+
+// 获取指定的struct列的反射type
+// 传入的name可以接受.分割
+// 此方法是getFieldByNameInner的包装，带有缓存机制
 func getFieldByName(t reflect.Type, name string) (reflect.StructField, bool) {
-	getFieldByNameMutex.RLock()
+	getFieldByNameMutex.RLock() //先查询缓存
 	result, isExist := getFieldByNameCache[t][name]
 	getFieldByNameMutex.RUnlock()
 

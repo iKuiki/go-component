@@ -53,6 +53,8 @@ var arrayMappingInfoMap struct {
 
 var interfaceType reflect.Type
 
+// 获取指定对象的结构信息的实现
+// @param tag 用来读取json相关定义时，读取的tag
 func getDataTagInfoInner(dataType reflect.Type, tag string) arrayMappingInfo {
 	dataTypeKind := GetTypeKind(dataType)
 	result := arrayMappingInfo{}
@@ -75,7 +77,7 @@ func getDataTagInfoInner(dataType reflect.Type, tag string) arrayMappingInfo {
 				var omitempty bool
 				var canRead bool
 				var canWrite bool
-				singleName = nameMapper(singleDataType.Name)
+				singleName = nameMapper(singleDataType.Name) // TODO: 此处是否可以考虑不要用nameMapper
 				canRead = true
 				canWrite = true
 				omitempty = false
@@ -117,6 +119,9 @@ func getDataTagInfoInner(dataType reflect.Type, tag string) arrayMappingInfo {
 	return result
 }
 
+// 获取指定对象的结构信息的代理
+// 通过此方法有缓存
+// @param tag 用来读取json相关定义时，读取的tag
 func getDataTagInfo(target reflect.Type, tag string) arrayMappingInfo {
 	arrayMappingInfoMap.mutex.RLock()
 	var result arrayMappingInfo
@@ -143,78 +148,83 @@ func getDataTagInfo(target reflect.Type, tag string) arrayMappingInfo {
 	return result
 }
 
+// 将目标对象转为map的实现
+// 支持传入的data类型包括struct、array、map以及其指针
+// @param dataValue 目标对象的反射value
+// @param 用于组织返回的map的key的取值来源，从目标struct的哪个tag取值，此取值可影响data字段的name
+// @return resultMap 转换后的map的value，但如果转换失败，则返回原是value
+// @return isEmptyValue 是否是空值
 func arrayToMapInner(dataValue reflect.Value, tag string) (reflect.Value, bool) {
 	if dataValue.IsValid() == false {
 		return dataValue, true
-	} else {
-		var result reflect.Value
-		var isEmpty bool
-		dataType := getDataTagInfo(dataValue.Type(), tag)
-		if dataType.kind == TypeKind.STRUCT && dataType.isTimeType == true {
-			timeValue := dataValue.Interface().(time.Time)
-			result = reflect.ValueOf(timeValue.Format("2006-01-02 15:04:05"))
-			isEmpty = IsEmptyValue(dataValue)
-		} else if dataType.kind == TypeKind.STRUCT && dataType.isTimeType == false {
-			resultMap := map[string]interface{}{}
-			for _, singleType := range dataType.field {
-				if singleType.canWrite == false {
+	}
+	var result reflect.Value
+	var isEmpty bool
+	dataType := getDataTagInfo(dataValue.Type(), tag)
+	if dataType.kind == TypeKind.STRUCT && dataType.isTimeType == true {
+		timeValue := dataValue.Interface().(time.Time)
+		result = reflect.ValueOf(timeValue.Format("2006-01-02 15:04:05"))
+		isEmpty = IsEmptyValue(dataValue)
+	} else if dataType.kind == TypeKind.STRUCT && dataType.isTimeType == false {
+		resultMap := map[string]interface{}{}
+		for _, singleType := range dataType.field {
+			if singleType.canWrite == false {
+				continue
+			}
+			singleResultMap, isEmptyValue := arrayToMapInner(dataValue.FieldByIndex(singleType.index), tag)
+			if singleType.anonymous == false {
+				if singleType.omitempty == true && isEmptyValue {
 					continue
 				}
-				singleResultMap, isEmptyValue := arrayToMapInner(dataValue.FieldByIndex(singleType.index), tag)
-				if singleType.anonymous == false {
-					if singleType.omitempty == true && isEmptyValue {
-						continue
-					}
-					if singleResultMap.IsValid() == false {
-						continue
-					}
-					resultMap[singleType.name] = singleResultMap.Interface()
-				} else {
-					combileMap(resultMap, singleResultMap)
+				if singleResultMap.IsValid() == false {
+					continue
 				}
+				resultMap[singleType.name] = singleResultMap.Interface()
+			} else {
+				combileMap(resultMap, singleResultMap)
 			}
-			result = reflect.ValueOf(resultMap)
-			isEmpty = (len(resultMap) == 0)
-		} else if dataType.kind == TypeKind.ARRAY {
-			resultSlice := []interface{}{}
-			dataLen := dataValue.Len()
-			for i := 0; i != dataLen; i++ {
-				singleDataValue := dataValue.Index(i)
-				singleDataResult, _ := arrayToMapInner(singleDataValue, tag)
-				resultSlice = append(resultSlice, singleDataResult.Interface())
-			}
-			result = reflect.ValueOf(resultSlice)
-			isEmpty = (len(resultSlice) == 0)
-		} else if dataType.kind == TypeKind.MAP {
-			dataKeyType := dataValue.Type().Key()
-			resultMapType := reflect.MapOf(dataKeyType, interfaceType)
-			resultMap := reflect.MakeMap(resultMapType)
-			dataKeys := dataValue.MapKeys()
-			for _, singleDataKey := range dataKeys {
-				singleDataValue := dataValue.MapIndex(singleDataKey)
-				singleDataResult, _ := arrayToMapInner(singleDataValue, tag)
-				resultMap.SetMapIndex(singleDataKey, singleDataResult)
-			}
-			result = resultMap
-			isEmpty = (len(dataKeys) == 0)
-		} else if dataType.kind == TypeKind.INTERFACE ||
-			dataType.kind == TypeKind.PTR {
-			result, isEmpty = arrayToMapInner(dataValue.Elem(), tag)
-		} else {
-			result = dataValue
-			isEmpty = IsEmptyValue(dataValue)
 		}
-		return result, isEmpty
+		result = reflect.ValueOf(resultMap)
+		isEmpty = (len(resultMap) == 0)
+	} else if dataType.kind == TypeKind.ARRAY {
+		resultSlice := []interface{}{}
+		dataLen := dataValue.Len()
+		for i := 0; i != dataLen; i++ {
+			singleDataValue := dataValue.Index(i)
+			singleDataResult, _ := arrayToMapInner(singleDataValue, tag)
+			resultSlice = append(resultSlice, singleDataResult.Interface())
+		}
+		result = reflect.ValueOf(resultSlice)
+		isEmpty = (len(resultSlice) == 0)
+	} else if dataType.kind == TypeKind.MAP {
+		dataKeyType := dataValue.Type().Key()
+		resultMapType := reflect.MapOf(dataKeyType, interfaceType)
+		resultMap := reflect.MakeMap(resultMapType)
+		dataKeys := dataValue.MapKeys()
+		for _, singleDataKey := range dataKeys {
+			singleDataValue := dataValue.MapIndex(singleDataKey)
+			singleDataResult, _ := arrayToMapInner(singleDataValue, tag)
+			resultMap.SetMapIndex(singleDataKey, singleDataResult)
+		}
+		result = resultMap
+		isEmpty = (len(dataKeys) == 0)
+	} else if dataType.kind == TypeKind.INTERFACE ||
+		dataType.kind == TypeKind.PTR {
+		result, isEmpty = arrayToMapInner(dataValue.Elem(), tag)
+	} else {
+		result = dataValue
+		isEmpty = IsEmptyValue(dataValue)
 	}
+	return result, isEmpty
 }
 
+// ArrayToMap 将struct转为map
 func ArrayToMap(data interface{}, tag string) interface{} {
 	dataValue, _ := arrayToMapInner(reflect.ValueOf(data), tag)
 	if dataValue.IsValid() == false {
 		return nil
-	} else {
-		return dataValue.Interface()
 	}
+	return dataValue.Interface()
 }
 
 func mapToBool(dataValue reflect.Value, target reflect.Value) error {

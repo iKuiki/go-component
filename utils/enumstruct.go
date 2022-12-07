@@ -7,7 +7,7 @@ import (
 )
 
 type EnumData struct {
-	Id   int
+	ID   int
 	Name string
 }
 
@@ -47,7 +47,7 @@ func InitEnumStruct(this interface{}) {
 
 		result.names[singleFieldTagArray[0]] = singleFieldTagSeeName
 		result.datas = append(result.datas, EnumData{
-			Id:   singleFieldTagValue,
+			ID:   singleFieldTagValue,
 			Name: singleFieldTagSeeName,
 		})
 		enumValue.Elem().Field(i).SetInt(int64(singleFieldTagValue))
@@ -76,7 +76,7 @@ func (this *EnumStruct) Keys() []int {
 	for _, singleEnum := range this.datas {
 		result = append(
 			result,
-			singleEnum.Id,
+			singleEnum.ID,
 		)
 	}
 	return result
@@ -94,7 +94,7 @@ func (this *EnumStruct) Values() []string {
 }
 
 type EnumDataString struct {
-	Id   string
+	ID   string
 	Name string
 }
 
@@ -131,7 +131,7 @@ func InitEnumStructString(this interface{}) {
 
 		result.names[singleFieldTagValue] = singleFieldTagSeeName
 		result.datas = append(result.datas, EnumDataString{
-			Id:   singleFieldTagValue,
+			ID:   singleFieldTagValue,
 			Name: singleFieldTagSeeName,
 		})
 
@@ -156,7 +156,7 @@ func (this *EnumStructString) Keys() []string {
 	for _, singleEnum := range this.datas {
 		result = append(
 			result,
-			singleEnum.Id,
+			singleEnum.ID,
 		)
 	}
 	return result
