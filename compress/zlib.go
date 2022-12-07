@@ -6,7 +6,8 @@ import (
 	"io/ioutil"
 )
 
-func CompressZlib(data []byte) ([]byte, error) {
+// Zlib 以zlib压缩数据
+func Zlib(data []byte) ([]byte, error) {
 	var buffer bytes.Buffer
 	writer := zlib.NewWriter(&buffer)
 	_, err := writer.Write(data)
@@ -20,7 +21,8 @@ func CompressZlib(data []byte) ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-func DecompressZlib(data []byte) ([]byte, error) {
+// DeZlib 以zlib解压数据
+func DeZlib(data []byte) ([]byte, error) {
 	dataReader := bytes.NewReader(data)
 	gzipReader, err := zlib.NewReader(dataReader)
 	if err != nil {

@@ -1,4 +1,4 @@
-package language
+package utils
 
 import (
 	"fmt"
@@ -77,7 +77,7 @@ func ArrayColumnTable(column interface{}, data interface{}) [][]string {
 	result := [][]string{}
 
 	columnMap := column.(map[string]string)
-	columnKeys, _ := ArrayKeyAndValue(column)
+	columnKeys, _ := MapKeyAndValue(column)
 	columnKeysReal := columnKeys.([]string)
 	columnValuesReal := []string{}
 	sort.Sort(sort.StringSlice(columnKeysReal))

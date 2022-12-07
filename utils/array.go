@@ -1,4 +1,4 @@
-package language
+package utils
 
 import (
 	"fmt"
@@ -6,26 +6,6 @@ import (
 	"reflect"
 	"sort"
 )
-
-func ArrayKeyAndValue(data interface{}) (interface{}, interface{}) {
-	//解析data
-	dataType := reflect.TypeOf(data)
-	if dataType.Kind() != reflect.Map {
-		panic("need a map for arrayKeyAndValue")
-	}
-	dataKeyType := dataType.Key()
-	dataValueType := dataType.Elem()
-
-	//合并数据
-	dataKeySlice := reflect.MakeSlice(reflect.SliceOf(dataKeyType), 0, 0)
-	dataValueSlice := reflect.MakeSlice(reflect.SliceOf(dataValueType), 0, 0)
-	dataValue := reflect.ValueOf(data)
-	for _, singleKey := range dataValue.MapKeys() {
-		dataKeySlice = reflect.Append(dataKeySlice, singleKey)
-		dataValueSlice = reflect.Append(dataValueSlice, dataValue.MapIndex(singleKey))
-	}
-	return dataKeySlice.Interface(), dataValueSlice.Interface()
-}
 
 func ArrayReverse(data interface{}) interface{} {
 	dataValue := reflect.ValueOf(data)

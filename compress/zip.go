@@ -8,7 +8,8 @@ import (
 	"path"
 )
 
-func CompressZipFile(inputFileName string, outputFileName string) error {
+// ZipFile 以zip压缩文件
+func ZipFile(inputFileName string, outputFileName string) error {
 	//建立读取文件
 	inputFile, err := os.Open(inputFileName)
 	if err != nil {
@@ -35,7 +36,8 @@ func CompressZipFile(inputFileName string, outputFileName string) error {
 	return nil
 }
 
-func DecompressZipFile(inputFileName string, outputFileName string) error {
+// DeZipFile 以zip解压文件
+func DeZipFile(inputFileName string, outputFileName string) error {
 	//建立写入文件
 	outputFile, err := os.Create(outputFileName)
 	if err != nil {
@@ -49,7 +51,7 @@ func DecompressZipFile(inputFileName string, outputFileName string) error {
 	}
 	defer zipReader.Close()
 	if len(zipReader.File) == 0 {
-		return errors.New("zip is empty!")
+		return errors.New("zip is empty")
 	}
 	fileOpen, err := zipReader.File[0].Open()
 	if err != nil {

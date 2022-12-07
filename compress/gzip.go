@@ -6,7 +6,8 @@ import (
 	"io/ioutil"
 )
 
-func CompressGzip(data []byte) ([]byte, error) {
+// Gzip 以gzip压缩数据
+func Gzip(data []byte) ([]byte, error) {
 	var buffer bytes.Buffer
 	writer := gzip.NewWriter(&buffer)
 	_, err := writer.Write(data)
@@ -20,7 +21,8 @@ func CompressGzip(data []byte) ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-func DecompressGzip(data []byte) ([]byte, error) {
+// DeGzip 以gzip解压数据
+func DeGzip(data []byte) ([]byte, error) {
 	dataReader := bytes.NewReader(data)
 	gzipReader, err := gzip.NewReader(dataReader)
 	if err != nil {
