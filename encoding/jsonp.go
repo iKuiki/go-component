@@ -6,11 +6,11 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/iKuiki/go-component/language"
+	"github.com/iKuiki/go-component/utils"
 )
 
 func EncodeJsonp(functionName string, data interface{}) ([]byte, error) {
-	changeValue := language.ArrayToMap(data, "jsonp")
+	changeValue := utils.ArrayToMap(data, "jsonp")
 	jsonResult, err := json.Marshal(changeValue)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func DecodeJsonp(data []byte, value interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	err = language.MapToArray(valueDynamic, value, "jsonp")
+	err = utils.MapToArray(valueDynamic, value, "jsonp")
 	if err != nil {
 		return "", err
 	}

@@ -1,5 +1,7 @@
 package utils
 
+// 基础类函数
+
 import (
 	"math"
 	"reflect"
@@ -8,8 +10,7 @@ import (
 	"time"
 )
 
-// 基础类函数
-func QuerySelect(data interface{}, selectFuctor interface{}) interface{} {
+func QuerySelect(data interface{}, selectFuctor interface{}) interface{} { // TODO: 这里可以改为使用范型的
 	dataValue := reflect.ValueOf(data)
 	dataLen := dataValue.Len()
 
@@ -27,7 +28,7 @@ func QuerySelect(data interface{}, selectFuctor interface{}) interface{} {
 	return resultValue.Interface()
 }
 
-func QueryWhere(data interface{}, whereFuctor interface{}) interface{} {
+func QueryWhere(data interface{}, whereFuctor interface{}) interface{} { // TODO: 这里可以改为使用范型的
 	dataValue := reflect.ValueOf(data)
 	dataType := dataValue.Type()
 	dataLen := dataValue.Len()
@@ -46,7 +47,7 @@ func QueryWhere(data interface{}, whereFuctor interface{}) interface{} {
 	return resultValue.Interface()
 }
 
-func QueryReduce(data interface{}, reduceFuctor interface{}, resultReduce interface{}) interface{} {
+func QueryReduce(data interface{}, reduceFuctor interface{}, resultReduce interface{}) interface{} { // TODO: 这里可以改为使用范型的
 	dataValue := reflect.ValueOf(data)
 	dataLen := dataValue.Len()
 
@@ -67,20 +68,22 @@ func QueryReduce(data interface{}, reduceFuctor interface{}, resultReduce interf
 }
 
 type queryCompare func(reflect.Value, reflect.Value) int
+
+// 实现了sort接口的切片排序结构
 type querySortSlice struct {
 	target         reflect.Value
 	targetElemType reflect.Type
 	targetCompare  []queryCompare
 }
 
-func (this *querySortSlice) Len() int {
-	return this.target.Len()
+func (t *querySortSlice) Len() int {
+	return t.target.Len()
 }
 
-func (this *querySortSlice) Less(i, j int) bool {
-	left := this.target.Index(i)
-	right := this.target.Index(j)
-	for _, singleCompare := range this.targetCompare {
+func (t *querySortSlice) Less(i, j int) bool {
+	left := t.target.Index(i)
+	right := t.target.Index(j)
+	for _, singleCompare := range t.targetCompare {
 		compareResult := singleCompare(left, right)
 		if compareResult < 0 {
 			return true
@@ -91,16 +94,16 @@ func (this *querySortSlice) Less(i, j int) bool {
 	return false
 }
 
-func (this *querySortSlice) Swap(i, j int) {
-	temp := reflect.New(this.targetElemType).Elem()
-	left := this.target.Index(i)
-	right := this.target.Index(j)
+func (t *querySortSlice) Swap(i, j int) {
+	temp := reflect.New(t.targetElemType).Elem()
+	left := t.target.Index(i)
+	right := t.target.Index(j)
 	temp.Set(left)
 	left.Set(right)
 	right.Set(temp)
 }
 
-// QuerySort 对查询对象排序
+// QuerySort 对传入的查询对象，按指定字段排序
 func QuerySort(data interface{}, sortType string) interface{} {
 	//拷贝一份
 	dataValue := reflect.ValueOf(data)

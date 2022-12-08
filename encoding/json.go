@@ -3,11 +3,11 @@ package encoding
 import (
 	"encoding/json"
 
-	"github.com/iKuiki/go-component/language"
+	"github.com/iKuiki/go-component/utils"
 )
 
 func EncodeJson(data interface{}) ([]byte, error) {
-	changeValue := language.ArrayToMap(data, "json")
+	changeValue := utils.ArrayToMap(data, "json")
 	return json.Marshal(changeValue)
 }
 
@@ -17,5 +17,5 @@ func DecodeJson(data []byte, value interface{}) error {
 	if err != nil {
 		return err
 	}
-	return language.MapToArray(valueDynamic, value, "json")
+	return utils.MapToArray(valueDynamic, value, "json")
 }

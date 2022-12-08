@@ -7,13 +7,11 @@ import (
 )
 
 func TestQuerySort(t *testing.T) {
-	a := []struct {
-		ID   int
-		Name string
-	}{
-		{ID: 2, Name: "b"},
-		{ID: 1, Name: "a"},
-		{ID: 3, Name: "c"},
+	a := []DemoBase{
+		{ID: 2, Nickname: "b"},
+		{ID: 1, Nickname: "a"},
+		{ID: 3, Nickname: "d"},
+		{ID: 3, Nickname: "c"},
 	}
 	as := utils.QuerySort(a, "ID")
 	t.Log(as)
