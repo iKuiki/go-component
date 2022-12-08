@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+// StructToMap 将struct转为map
+// @param model 传入的待转换的struct模型
+// @param except 要忽略的字段
 func StructToMap(model interface{}, except ...string) map[string]interface{} {
 	ret := map[string]interface{}{}
 
@@ -52,7 +55,8 @@ func StructToMap(model interface{}, except ...string) map[string]interface{} {
 	return ret
 }
 
-func StructToMapViaJson(model interface{}) map[string]interface{} {
+// StructToMapViaJSON 通过json将struct转为map
+func StructToMapViaJSON(model interface{}) map[string]interface{} {
 	data, err := json.Marshal(model)
 	if err != nil {
 		return nil
