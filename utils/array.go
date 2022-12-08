@@ -38,6 +38,11 @@ func ArrayIn(arrayData interface{}, findData interface{}) int {
 	return findIndex
 }
 
+// ArrayExist 返回给定的元素在切片中是否存在
+func ArrayExist(arrayData interface{}, findData interface{}) bool {
+	return ArrayIn(arrayData, findData) != -1
+}
+
 // ArrayUnique 将给定切片中重复元素剔除
 // 保证切片中元素唯一
 func ArrayUnique(arrayData interface{}) interface{} {
