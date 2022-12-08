@@ -5,27 +5,56 @@ import (
 	"sync"
 )
 
-// TypeKind kind类型
-var TypeKind struct {
-	EnumStruct
-	BOOL      int `enum:"1,布尔"`
-	INT       int `enum:"2,有符号整数"`
-	UINT      int `enum:"3,无符号整数"`
-	FLOAT     int `enum:"4,浮点数"`
-	PTR       int `enum:"5,指针"`
-	STRING    int `enum:"6,字符串"`
-	ARRAY     int `enum:"7,数组"`
-	MAP       int `enum:"8,映射"`
-	STRUCT    int `enum:"9,结构体"`
-	INTERFACE int `enum:"10,接口"`
-	FUNC      int `enum:"11,函数"`
-	CHAN      int `enum:"12,通道"`
-	OTHER     int `enum:"13,其他"`
-}
+const (
+	// TypeKindBool 布尔
+	TypeKindBool int = 1
+	// TypeKindInt 有符号整数
+	TypeKindInt int = 2
+	// TypeKindUint 无符号整数
+	TypeKindUint int = 3
+	// TypeKindFloat 浮点数
+	TypeKindFloat int = 4
+	// TypeKindPtr 指针
+	TypeKindPtr int = 5
+	// TypeKindString 字符串
+	TypeKindString int = 6
+	// TypeKindArray 数组
+	TypeKindArray int = 7
+	// TypeKindMap 映射
+	TypeKindMap int = 8
+	// TypeKindStruct 结构体
+	TypeKindStruct int = 9
+	// TypeKindInterface 接口
+	TypeKindInterface int = 10
+	// TypeKindFunc 函数
+	TypeKindFunc int = 11
+	// TypeKindChan 通道
+	TypeKindChan int = 12
+	// TypeKindOther 其他
+	TypeKindOther int = 13
+)
 
-func init() {
-	InitEnumStruct(&TypeKind)
-}
+// // TypeKind kind类型
+// var TypeKind struct {
+// 	EnumStruct
+// 	BOOL      int `enum:"1,布尔"`
+// 	INT       int `enum:"2,有符号整数"`
+// 	UINT      int `enum:"3,无符号整数"`
+// 	FLOAT     int `enum:"4,浮点数"`
+// 	PTR       int `enum:"5,指针"`
+// 	STRING    int `enum:"6,字符串"`
+// 	ARRAY     int `enum:"7,数组"`
+// 	MAP       int `enum:"8,映射"`
+// 	STRUCT    int `enum:"9,结构体"`
+// 	INTERFACE int `enum:"10,接口"`
+// 	FUNC      int `enum:"11,函数"`
+// 	CHAN      int `enum:"12,通道"`
+// 	OTHER     int `enum:"13,其他"`
+// }
+
+// func init() {
+// 	InitEnumStruct(&TypeKind)
+// }
 
 // GetTypeKind 获取reflect下的Type
 // 此处获取的kind是一个近似kind
@@ -33,31 +62,31 @@ func init() {
 func GetTypeKind(t reflect.Type) int {
 	switch t.Kind() {
 	case reflect.Bool:
-		return TypeKind.BOOL
+		return TypeKindBool
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return TypeKind.INT
+		return TypeKindInt
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
-		return TypeKind.UINT
+		return TypeKindUint
 	case reflect.Float32, reflect.Float64:
-		return TypeKind.FLOAT
+		return TypeKindFloat
 	case reflect.Ptr:
-		return TypeKind.PTR
+		return TypeKindPtr
 	case reflect.String:
-		return TypeKind.STRING
+		return TypeKindString
 	case reflect.Array, reflect.Slice:
-		return TypeKind.ARRAY
+		return TypeKindArray
 	case reflect.Map:
-		return TypeKind.MAP
+		return TypeKindMap
 	case reflect.Struct:
-		return TypeKind.STRUCT
+		return TypeKindStruct
 	case reflect.Interface:
-		return TypeKind.INTERFACE
+		return TypeKindInterface
 	case reflect.Func:
-		return TypeKind.FUNC
+		return TypeKindFunc
 	case reflect.Chan:
-		return TypeKind.CHAN
+		return TypeKindChan
 	default:
-		return TypeKind.OTHER
+		return TypeKindOther
 	}
 }
 

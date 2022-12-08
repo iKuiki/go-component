@@ -312,7 +312,7 @@ func getQueryCompares(dataType reflect.Type, sortTypeStr string) []queryCompare 
 // @return queryCompare 比较func，对传入的reflect.Value比较，如果前者小则返回-1，前者大则返回1
 func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 	typeKind := GetTypeKind(fieldType)
-	if typeKind == TypeKind.BOOL {
+	if typeKind == TypeKindBool {
 		return func(left reflect.Value, right reflect.Value) int {
 			leftBool := left.Bool()
 			rightBool := right.Bool()
@@ -324,7 +324,7 @@ func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 				return 1
 			}
 		}
-	} else if typeKind == TypeKind.INT {
+	} else if typeKind == TypeKindInt {
 		return func(left reflect.Value, right reflect.Value) int {
 			leftInt := left.Int()
 			rightInt := right.Int()
@@ -336,7 +336,7 @@ func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 				return 0
 			}
 		}
-	} else if typeKind == TypeKind.UINT {
+	} else if typeKind == TypeKindUint {
 		return func(left reflect.Value, right reflect.Value) int {
 			leftUint := left.Uint()
 			rightUint := right.Uint()
@@ -348,7 +348,7 @@ func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 				return 0
 			}
 		}
-	} else if typeKind == TypeKind.FLOAT {
+	} else if typeKind == TypeKindFloat {
 		return func(left reflect.Value, right reflect.Value) int {
 			leftFloat := left.Float()
 			rightFloat := right.Float()
@@ -360,7 +360,7 @@ func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 				return 0
 			}
 		}
-	} else if typeKind == TypeKind.STRING {
+	} else if typeKind == TypeKindString {
 		return func(left reflect.Value, right reflect.Value) int {
 			leftString := left.String()
 			rightString := right.String()
@@ -372,7 +372,7 @@ func getSingleQueryCompare(fieldType reflect.Type) queryCompare {
 				return 0
 			}
 		}
-	} else if typeKind == TypeKind.STRUCT && fieldType == reflect.TypeOf(time.Time{}) {
+	} else if typeKind == TypeKindStruct && fieldType == reflect.TypeOf(time.Time{}) {
 		return func(left reflect.Value, right reflect.Value) int {
 			leftTime := left.Interface().(time.Time)
 			rightTime := right.Interface().(time.Time)
