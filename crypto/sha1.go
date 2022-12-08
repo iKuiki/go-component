@@ -5,7 +5,8 @@ import (
 	"encoding/hex"
 )
 
-func CryptoSha1(data string) string {
+// Sha1 将给定字符串通过sha1加密
+func Sha1(data string) string {
 	hash := sha1.New()
 	hash.Write([]byte(data))
 	etag := hash.Sum(nil)

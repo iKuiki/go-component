@@ -1,19 +1,18 @@
-package crypto
+package crypto_test
 
 import (
 	"testing"
+
+	"github.com/iKuiki/go-component/crypto"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPasswordCrypto(t *testing.T) {
 	password := "aabbcc"
-	hash, err := PasswordHash(password, PASSWORD_ALGO_BCRYPT)
-	if err != nil {
-		t.Fatalf("PasswordHash Error: %s\n", err.Error())
-	}
+	hash, err := crypto.PasswordHash(password, crypto.PasswordHashKindBcrypt)
+	assert.NoError(t, err)
 	t.Logf("PasswordHash: %s\nlen: %d\n", hash, len(hash))
-	isRight, err := PasswordVerify(password, hash, PASSWORD_ALGO_BCRYPT)
-	if err != nil {
-		t.Fatalf("PasswordVerify Error: %s\n", err.Error())
-	}
-	t.Logf("PasswordVerify Result: %t\n", isRight)
+	isRight, err := crypto.PasswordVerify(password, hash, crypto.PasswordHashKindBcrypt)
+	assert.NoError(t, err)
+	assert.True(t, isRight)
 }

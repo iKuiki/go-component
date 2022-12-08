@@ -15,10 +15,12 @@ func generateRand(size int, targetLength byte) string {
 	return string(result)
 }
 
-func CryptoRand(size int) string {
+// RandString 获取随机字符串
+func RandString(size int) string {
 	return generateRand(size, byte(len(randStr)))
 }
 
-func CryptoRandDigit(size int) string {
+// RandDigit 获取随机数字
+func RandDigit(size int) string {
 	return generateRand(size, 10)
 }

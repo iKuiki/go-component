@@ -2,21 +2,26 @@ package crypto
 
 import (
 	"errors"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
-type HashKind uint
+// PasswordHashKind 密码加密类型
+type PasswordHashKind uint
 
 const (
-	Invalid HashKind = iota
-	PASSWORD_ALGO_BCRYPT
+	// PasswordHashKindInvalid 非法加密类型
+	PasswordHashKindInvalid PasswordHashKind = iota
+	// PasswordHashKindBcrypt bcrypt加密
+	PasswordHashKindBcrypt
 )
 
-func PasswordHash(password string, algo HashKind) (string, error) {
+// PasswordHash 密码加密
+func PasswordHash(password string, algo PasswordHashKind) (string, error) {
 	var result []byte
 	var err error
 	switch algo {
-	case PASSWORD_ALGO_BCRYPT:
+	case PasswordHashKindBcrypt:
 		result, err = bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	default:
 		return "", errors.New("invalid password hash algo")
@@ -27,9 +32,10 @@ func PasswordHash(password string, algo HashKind) (string, error) {
 	return string(result), err
 }
 
-func PasswordVerify(password string, hash string, algo HashKind) (result bool, err error) {
+// PasswordVerify 密码解密认证
+func PasswordVerify(password string, hash string, algo PasswordHashKind) (result bool, err error) {
 	switch algo {
-	case PASSWORD_ALGO_BCRYPT:
+	case PasswordHashKindBcrypt:
 		if len(hash) <= 4 {
 			return false, errors.New("invalid password hash format [" + hash + "]")
 		}
