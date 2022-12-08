@@ -9,6 +9,7 @@ import (
 	"github.com/iKuiki/go-component/utils"
 )
 
+// EncodeJsonp 将数据编码到jsonp
 func EncodeJsonp(functionName string, data interface{}) ([]byte, error) {
 	changeValue := utils.ArrayToMap(data, "jsonp")
 	jsonResult, err := json.Marshal(changeValue)
@@ -21,6 +22,7 @@ func EncodeJsonp(functionName string, data interface{}) ([]byte, error) {
 	return result, nil
 }
 
+// DecodeJsonp 将数据解码到jsonp
 func DecodeJsonp(data []byte, value interface{}) (string, error) {
 	leftIndex := bytes.IndexByte(data, '(')
 	rightIndex := bytes.LastIndexByte(data, ')')

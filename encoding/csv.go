@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 )
 
+// EncodeCsv 将二位数组string格式化为csv
 func EncodeCsv(data [][]string) ([]byte, error) {
 	var writer bytes.Buffer
 	data1, err := EncodeCsvHeader()
@@ -20,10 +21,12 @@ func EncodeCsv(data [][]string) ([]byte, error) {
 	return writer.Bytes(), nil
 }
 
+// EncodeCsvHeader 获取csv表头编码
 func EncodeCsvHeader() ([]byte, error) {
 	return []byte("\xEF\xBB\xBF"), nil
 }
 
+// EncodeCsvBody 编码csv的body
 func EncodeCsvBody(data [][]string) ([]byte, error) {
 	var writer bytes.Buffer
 	csvWriter := csv.NewWriter(&writer)
