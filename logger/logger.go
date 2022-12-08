@@ -33,17 +33,3 @@ type Logger interface {
 func SetDefaultLogger(logger Logger) {
 	defaultLogger = logger
 }
-
-const (
-	// CtxKeyUserID User ID Key
-	CtxKeyUserID = "user_id"
-	// CtxKeyRequestID Request Key
-	CtxKeyRequestID = "request_id"
-
-	// CtxKeyHost 请求的host(一般为http请求)
-	CtxKeyHost = "host"
-	// CtxKeyBuildTime 主程序编译时间
-	CtxKeyBuildTime = "build_time"
-	// CtxKeyBuildGitHash 主程序编译的gitHash
-	CtxKeyBuildGitHash = "build_git_hash"
-)
